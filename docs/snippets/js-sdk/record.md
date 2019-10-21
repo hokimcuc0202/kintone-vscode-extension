@@ -59,8 +59,7 @@ var fields = [
     // another fieldCode
 ]
 var totalCount = 'YOUR_DECIDE_TRUE_OR_FALSE';
-var seek = 'YOUR_DECIDE_TRUE_OR_FALSE';
-kintoneRecord.getAllRecordsByQuery({app, query, fields, totalCount, seek}).then((rsp) => {
+kintoneRecord.getRecords({app, query, fields, totalCount}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
   // This SDK return err with KintoneAPIException
