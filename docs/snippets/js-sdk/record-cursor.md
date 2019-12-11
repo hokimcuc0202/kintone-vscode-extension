@@ -10,7 +10,23 @@
 <td>kjs-cursor</td>
 <td>
 <pre>
-const recordCursor= new kintone.RecordCursor(kintoneConn);
+var kintoneAuth = new kintoneJSSDK.Auth();
+var paramsAuth = {
+    username: 'YOUR_USER_NAME',
+    password: 'YOUR_PASSWORD'
+};
+kintoneAuth.setPasswordAuth(paramsAuth);
+ 
+var paramsConnection = {
+    domain: 'YOUR_DOMAIN',
+    auth: kintoneAuth
+};
+var connection = new kintoneJSSDK.Connection(paramsConnection);
+// with connection
+var kintoneRC = new kintoneJSSDK.RecordCursor({connection});
+ 
+// without connection, module will use session authentication of kintone
+var kintoneRC = new kintoneJSSDK.RecordCursor();
 </pre>
 </td>
 <td>The constructor of record cursor</td>
@@ -20,18 +36,21 @@ const recordCursor= new kintone.RecordCursor(kintoneConn);
 <td>kjs-cursor-createCursor</td>
 <td>
 <pre>
-const option = {
-       app: appID,
-       fields: [],
-       query: '',
-       size: 2
+var rcOption = {
+    app: YOUR_APP_ID,
+    fields: ['YOUR_FIELD_CODE'],
+    query: 'YOUR_QUERY',
+    size: YOUR_SIZE
 }
  
-recordCursor.createCursor(option ).then(function(creatCursorResponse){
-     const myCursor = creatCursorResponse;
-     console.log('Cursor ID: ' + myCursor.id );
-     console.log('Total Count: ' + myCursor.totalCount );
-})
+kintoneRC.createCursor(rcOption).then(function(creatCursorResponse){
+    var myCursor = creatCursorResponse;
+    console.log('Cursor ID: ' + myCursor.id );
+    console.log('Total Count: ' + myCursor.totalCount );
+}).catch((err) => {
+    // This SDK return err with KintoneAPIException
+    console.log(err);
+});
 </pre>
 </td>
 <td>Create a cursor.</td>
@@ -41,12 +60,23 @@ recordCursor.createCursor(option ).then(function(creatCursorResponse){
 <td>kjs-cursor-getRecords</td>
 <td>
 <pre>
-const cursorID = 'your_cursorID'
-recordCursor.getRecords(cursorID)
-        .then(function(getRecordsResponse){
-            console.log('RecordCursor result: ');
-            console.log(getRecordsResponse);
-        })
+var rcOption = {
+    app: YOUR_APP_ID,
+    fields: ['YOUR_FIELD_CODE'],
+    query: 'YOUR_QUERY',
+    size: YOUR_SIZE
+}
+ 
+kintoneRC.createCursor(rcOption).then(function(creatCursorResponse){
+    var myCursor = creatCursorResponse;
+    return kintoneRC.getRecords({id: myCursor.id})
+}).then(function (getRecordsResponse) {
+    console.log('Records result: ');
+    console.log(getRecordsResponse);
+}).catch((err) => {
+    // This SDK return err with KintoneAPIException
+    console.log(err);
+});
 </pre>
 </td>
 <td>Get one block of records.</td>
@@ -56,12 +86,23 @@ recordCursor.getRecords(cursorID)
 <td>kjs-cursor-getAllRecords</td>
 <td>
 <pre>
-const cursorID = 'your_cursorID'
-recordCursor.getAllRecords(cursorID)
-        .then(function(getRecordsResponse){
-            console.log('RecordCursor result: ');
-            console.log(getRecordsResponse);
-        })
+var rcOption = {
+    app: YOUR_APP_ID,
+    fields: ['YOUR_FIELD_CODE'],
+    query: 'YOUR_QUERY',
+    size: YOUR_SIZE
+}
+ 
+kintoneRC.createCursor(rcOption).then(function(creatCursorResponse){
+    var myCursor = creatCursorResponse;
+    return kintoneRC.getAllRecords({id: myCursor.id})
+}).then(function (getAllRecordsResponse) {
+    console.log('All records result: ');
+    console.log(getAllRecordsResponse);
+}).catch((err) => {
+    // This SDK return err with KintoneAPIException
+    console.log(err);
+});
 </pre>
 </td>
 <td>Get all records</td>
@@ -71,12 +112,22 @@ recordCursor.getAllRecords(cursorID)
 <td>kjs-cursor-deleteCursor</td>
 <td>
 <pre>
-const cursorID = 'your_cursorID'
-recordCursor.deleteCursor(cursorID)
-        .then(function(getRecordsResponse){
-            console.log('RecordCursor result: ');
-            console.log(getRecordsResponse);
-        })
+var rcOption = {
+    app: YOUR_APP_ID,
+    fields: ['YOUR_FIELD_CODE'],
+    query: 'YOUR_QUERY',
+    size: YOUR_SIZE
+}
+ 
+kintoneRC.createCursor(rcOption).then(function(creatCursorResponse){
+    var myCursor = creatCursorResponse;
+    return kintoneRC.deleteCursor({id: myCursor.id})
+}).then(function (getAllRecordsResponse) {
+    console.log('Cursor Deleted');
+}).catch((err) => {
+    // This SDK return err with KintoneAPIException
+    console.log(err);
+});
 </pre>
 </td>
 <td>Delete a cursor</td>

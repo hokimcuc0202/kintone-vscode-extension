@@ -7,20 +7,25 @@
 </tr>
 
 <tr>
-<td>kjs-app</td>
-<td>
-<pre>
-const kintoneApp = new kintone.App(connection);
-</pre>
-</td>
-<td>Constructor for App module</td>
-</tr>
-
-<tr>
 <td>kjs-record</td>
 <td>
 <pre>
-const kintoneRecord = new kintone.Record(connection);
+var kintoneAuth = new kintoneJSSDK.Auth();
+var paramsAuth = {
+    username: 'YOUR_USER_NAME',
+    password: 'YOUR_PASSWORD'
+};
+kintoneAuth.setPasswordAuth(paramsAuth);
+ 
+var paramsConnection = {
+    domain: 'YOUR_DOMAIN',
+    auth: kintoneAuth
+};
+var connection = new kintoneJSSDK.Connection(paramsConnection);
+var kintoneRecord = new kintoneJSSDK.Record({connection});
+ 
+// without connection, module will use session authentication of kintone
+var kintoneRecord = new kintoneJSSDK.Record();
 </pre>
 </td>
 <td>The constructor of Record module</td>
@@ -30,13 +35,13 @@ const kintoneRecord = new kintone.Record(connection);
 <td>kjs-record-getRecord</td>
 <td>
 <pre>	
-const app = /*{your_app_id}*/;
-const id = {your_record_id};
-kintoneRecord.getRecord(app, id).then((rsp) => {
+var app = YOUR_APP_ID;
+var id = YOUR_RECORD_ID;
+kintoneRecord.getRecord({app, id}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -47,18 +52,18 @@ kintoneRecord.getRecord(app, id).then((rsp) => {
 <td>kjs-record-getRecords</td>
 <td>
 <pre>	
-const app = /*{your_app_id}*/;
-const query = '{your_query_string}';
-const fields = [
-    '{your_field_code}',
+var app = YOUR_APP_ID;
+var query = 'YOUR_QUERY_STRING';
+var fields = [
+    'YOUR_FIELD_CODE',
     // another fieldCode
 ]
-const totalCount = /*{your_decide_true_or_false}*/;
-kintoneRecord.getRecords(app, query, fields, totalCount).then((rsp) => {
+var totalCount = 'YOUR_DECIDE_TRUE_OR_FALSE';
+kintoneRecord.getRecords({app, query, fields, totalCount}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -69,18 +74,19 @@ kintoneRecord.getRecords(app, query, fields, totalCount).then((rsp) => {
 <td>kjs-record-getAllRecordsByQuery</td>
 <td>
 <pre>	
-const app = '{your_app_id}';
-const query = '{your_query_string}';
-const fields = [
-    '{your_field_code}',
+var app = YOUR_APP_ID;
+var query = 'YOUR_QUERY_STRING';
+var fields = [
+    'YOUR_FIELD_CODE',
     // another fieldCode
 ]
-const totalCount = '{your_decide_true_or_false}';
-kintoneRecord.getAllRecordsByQuery(app, query, fields, totalCount).then((rsp) => {
+var totalCount = 'YOUR_DECIDE_TRUE_OR_FALSE';
+var seek = 'YOUR_DECIDE_TRUE_OR_FALSE';
+kintoneRecord.getAllRecordsByQuery({app, query, fields, totalCount, seek}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
   // This SDK return err with KintoneAPIException
-  console.log(err.get());
+  console.log(err);
 });
 </pre>
 </td>
@@ -88,67 +94,45 @@ kintoneRecord.getAllRecordsByQuery(app, query, fields, totalCount).then((rsp) =>
 </tr>
 
 <tr>
-<td>kjs-record-getAllRecordsByCurso</td>
-<td>
-<pre>
-const app = /*{your_app_id}*/;
-const record = {
-    YourFieldCode: {
-        value: 'Value Of YourFieldCode'
-    },
-    // Another fieldcode here
-};
-kintoneRecord.addRecord(app, record).then((rsp) => {
-  console.log(rsp);
-}).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
-});
-</pre>
-</td>
-<td>Add one record to an app.</td>
-</tr>
-
-
-<tr>
-<td>kjs-record-getAllRecordsByCurso</td>
-<td>
-<pre>
-const app = /*{your_app_id}*/;
-const record = {
-    YourFieldCode: {
-        value: 'Value Of YourFieldCode'
-    },
-    // Another fieldcode here
-};
-kintoneRecord.addRecord(app, record).then((rsp) => {
-  console.log(rsp);
-}).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
-});
-</pre>
-</td>
-<td>Add one record to an app.</td>
-</tr>
-
-
-<tr>
 <td>kjs-record-getAllRecordsByCursor</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const record = {
-    YourFieldCode: {
-        value: 'Value Of YourFieldCode'
-    },
-    // Another fieldcode here
+const rcOption = {
+  app: {your_app_id},
+  fields: [
+    '{your_field_code}',
+    // another fieldCode
+  ],
+  query: '{your_query_string}'
 };
-kintoneRecord.addRecord(app, record).then((rsp) => {
+ 
+kintoneRecord.getAllRecordsByCursor(rcOption).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
+  // This SDK return err with KintoneAPIException
   console.log(err.get());
+});
+</pre>
+</td>
+<td>Retrieves details of all records from an app using a cursor.</td>
+</tr>
+
+<tr>
+<td>kjs-record-addRecord</td>
+<td>
+<pre>
+var app = YOUR_APP_ID;
+var record = {
+  YOUR_FIELD_CODE: {
+    value: 'VALUE_OF_YOUR_FIELD_CODE'
+  },
+  // Another fieldcode here
+};
+kintoneRecord.addRecord({app, record}).then((rsp) => {
+  console.log(rsp);
+}).catch((err) => {
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -158,23 +142,23 @@ kintoneRecord.addRecord(app, record).then((rsp) => {
 <tr>
 <td>kjs-record-addRecords</td>
 <td>
-<pre>	
-const app = /*{your_app_id}*/;
-const record = {
-  YourFieldCode: {
-    value: 'Value Of YourFieldCode'
-  },
-  // Another fieldcode here
+<pre>		
+var app = YOUR_APP_ID;
+var record = {
+    YOUR_FIELD_CODE: {
+        value: 'VALUE_OF_YOUR_FIELD_CODE'
+    },
+    // Another fieldcode here
 };
-const records = [
-  record
-  // another record
+var records = [
+    record,
+    // another record
 ];
-kintoneRecord.addRecords(app, records).then((rsp) => {
+kintoneRecord.addRecords({app, records}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -184,19 +168,19 @@ kintoneRecord.addRecords(app, records).then((rsp) => {
 <tr>
 <td>kjs-record-addAllRecords</td>
 <td>
-<pre>
-const app = '{your_app_id}';
-const record = {
-  YourFieldCode: {
-    value: 'Value Of YourFieldCode'
-  },
-  // Another fieldcode here
+<pre>	
+var app = YOUR_APP_ID;
+var record = {
+    YOUR_FIELD_CODE: {
+        value: 'VALUE_OF_YOUR_FIELD_CODE'
+    },
+    // Another fieldcode here
 };
-const records = [
-  record
-  // another record
+var records = [
+    record,
+    // another record
 ];
-kintoneRecord.addAllRecords(app, records).then((rsp) => {
+kintoneRecord.addAllRecords({app, records}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
   console.log(err)
@@ -207,23 +191,23 @@ kintoneRecord.addAllRecords(app, records).then((rsp) => {
 </tr>
 
 <tr>
-<td>kjs-record-updateRecord</td>
+<td>kjs-record-updateRecordByID</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const id = /*{your_record_id}*/;
-const record = {
-  YourFieldCode: {
-    value: 'Value Of YourFieldCode'
-  },
-  // Another fieldcode here
+var app = YOUR_APP_ID;
+var id = YOUR_RECORD_ID;
+var record = {
+    YOUR_FIELD_CODE: {
+        value: 'VALUE_OF_YOUR_FIELD_CODE'
+    },
+    // Another fieldcode here
 };
-const revision = /*{revision_of_record}*/;
-kintoneRecord.updateRecordByID(app, id, record, revision).then((rsp) => {
+var revision = REVISION_OF_RECORD;
+kintoneRecord.updateRecordByID({app, id, record, revision}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -234,23 +218,23 @@ kintoneRecord.updateRecordByID(app, id, record, revision).then((rsp) => {
 <td>kjs-record-updateRecordByUpdateKey</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const updateKey = {
-  field: '{your_fieldcode}',
-  value: '{your_fieldcode_value}'
+var app = YOUR_APP_ID;
+var updateKey = {
+  field: 'YOUR_FIELD_CODE',
+  value: 'YOUR_FIELD_CODE_VALUE'
 };
-const record = {
-  YourFieldCode: {
-    value: 'Value Of YourFieldCode'
+var record = {
+  YOUR_FIELD_CODE: {
+    value: 'VALUE_OF_YOUR_FIELD_CODE'
   },
   // Another fieldcode here
 };
-const revision = /*{revision_of_record}*/;
-kintoneRecord.updateRecordByUpdateKey(app, updateKey, record, revision).then((rsp) => {
+var revision = REVISION_OF_RECORD;
+kintoneRecord.updateRecordByUpdateKey({app, updateKey, record, revision}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -261,32 +245,36 @@ kintoneRecord.updateRecordByUpdateKey(app, updateKey, record, revision).then((rs
 <td>kjs-record-updateRecords</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const record = {
-    YourFieldCode: {
-        value: 'Value Of YourFieldCode'
-    },
-    // Another fieldcode here
+var app = YOUR_APP_ID;
+var record = {
+  YOUR_FIELD_CODE: {
+    value: 'VALUE_OF_YOUR_FIELD_CODE'
+  },
+  // Another fieldcode here
 };
-const recordUpdate = {
-    id: /*{your_record_id}*/, // Optional. Required, if updateKey will not be specified.
-    updateKey: { // Optional. Required, if id will not be specified.
-        field: '{your_field_code}',
-        value: '{your_field_code_value}'
-    },
-    record: record,
-    revision: /*{record_revision_number}*/ // Optional
+ 
+// This object can not have both "id" and "updateKey" keys at the same time.
+var recordUpdate = {
+  // Required, if updateKey will not be specified.
+  id: YOUR_RECORD_ID,
+  // Required, if id will not be specified.
+  updateKey: {
+    field: 'YOUR_FIELD_CODE',
+    value: 'YOUR_FIELD_CODE_VALUE'
+  },
+  record: record,
+  revision: RECORD_REVISION_NUMBER
 };
-const recordsUpdate = [
-    recordUpdate,
-    // Another recordUpdate
+var records= [
+  recordUpdate,
+  // Another recordUpdate
 ]
-kintoneRecord.updateRecords(app, recordsUpdate).then((rsp) => {
-  console.log(rsp);
-}).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
-});
+kintoneRecord.updateRecords({app, records}).then((rsp) => {
+    console.log(rsp);
+  }).catch((err) => {
+    // This SDK return err with KintoneAPIException
+    console.log(err);
+  });
 </pre>
 </td>
 <td>Updates details of multiple records in an app, by specifying their record number, or a different unique key.</td>
@@ -296,31 +284,35 @@ kintoneRecord.updateRecords(app, recordsUpdate).then((rsp) => {
 <td>kjs-record-updateAllRecords</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const record = {
-    YourFieldCode: {
-        value: 'Value Of YourFieldCode'
-    },
-    // Another fieldcode here
+var app = YOUR_APP_ID;
+var record = {
+  YOUR_FIELD_CODE: {
+    value: 'VALUE_OF_YOUR_FIELD_CODE'
+  },
+  // Another fieldcode here
 };
-const recordUpdate = {
-    id: /*{your_record_id}*/, // Optional. Required, if updateKey will not be specified.
-    updateKey: { // Optional. Required, if id will not be specified.
-        field: '{your_field_code}',
-        value: '{your_field_code_value}'
-    },
-    record: record,
-    revision: /*{record_revision_number}*/ // Optional
+ 
+// This object can not have both "id" and "updateKey" keys at the same time.
+var recordUpdate = {
+  // Required, if updateKey will not be specified.
+  id: YOUR_RECORD_ID,
+  // Required, if id will not be specified.
+  updateKey: {
+    field: 'YOUR_FIELD_CODE',
+    value: 'YOUR_FIELD_CODE_VALUE'
+  },
+  record: record,
+  revision: RECORD_REVISION_NUMBER
 };
-const recordsUpdate = [
-    recordUpdate,
-    // Another recordUpdate
+var records = [
+  recordUpdate,
+  // Another recordUpdate
 ]
-kintoneRecord.updateAllRecords(app, recordsUpdate).then((rsp) => {
-  console.log(rsp);
-}).catch((err) => {
+kintoneRecord.updateAllRecords({app, records}).then((rsp) => {
+    console.log(rsp);
+  }).catch((err) => {
   console.log(err)
-});
+  });
 </pre>
 </td>
 <td>Updates details of multiple records in an app, by specifying their record number, or a different unique key.</td>
@@ -330,13 +322,13 @@ kintoneRecord.updateAllRecords(app, recordsUpdate).then((rsp) => {
 <td>kjs-record-deleteRecords</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const ids = [/*your_record_id*/]
-kintoneRecord.deleteRecords(app, ids).then((rsp) => {
-  console.log(rsp);
+var app = YOUR_APP_ID;
+var ids = [YOUR_RECORD_ID]
+kintoneRecord.deleteRecords({app, ids}).then((rsp) => {
+   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+   // This SDK return err with KintoneAPIException
+   console.log(err);
 });
 </pre>
 </td>
@@ -347,14 +339,33 @@ kintoneRecord.deleteRecords(app, ids).then((rsp) => {
 <td>kjs-record-deleteRecordsWithRevision</td>
 <td>
 <pre>
-const app = 'your_app_id';
-const query = 'your_query_string';
-kintoneRecord.deleteAllRecordsByQuery(app, query).then((rsp) => {
-    console.log(rsp);
-})
-.catch((err) => {
-  console.log(err)
+var app = YOUR_APP_ID;
+var idsWithRevision = {
+  YOUR_RECORD_ID: REVISION_OF_RECORD
+}
+kintoneRecord.deleteRecordsWithRevision({app, idsWithRevision}).then((rsp) => {
+  console.log(rsp);
+}).catch((err) => {
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
+</pre>
+</td>
+<td>Deletes all records in an app by query string</td>
+</tr>
+
+<tr>
+<td>kjs-record-deleteAllRecordsByQuery</td>
+<td>
+<pre>
+var app = YOUR_APP_ID;
+ var query = 'YOUR_QUERY_STRING';
+ kintoneRecord.deleteAllRecordsByQuery({app, query}).then((rsp) => {
+     console.log(rsp);
+ })
+ .catch((err) => {
+   console.log(err)
+ });
 </pre>
 </td>
 <td>Deletes all records in an app by query string</td>
@@ -363,24 +374,24 @@ kintoneRecord.deleteAllRecordsByQuery(app, query).then((rsp) => {
 <tr>
 <td>kjs-record-upsertRecord</td>
 <td>
-<pre>	
-const app = /*{your_app_id}*/;
-const updateKey = {
-  field: '{your_fieldcode}',
-  value: '{your_fieldcode_value}'
+<pre>		
+var app = YOUR_APP_ID;
+var updateKey = {
+  field: 'YOUR_FIELD_CODE',
+  value: 'YOUR_FIELD_CODE_VALUE'
 };
-const record = {
-  YourFieldCode: {
-    value: 'Value Of YourFieldCode'
+var record = {
+  YOUR_FIELD_CODE: {
+    value: 'VALUE_OF_YOUR_FIELD_CODE'
   },
   // Another fieldcode here
 };
-const revision = 'revision_of_record';
-kintoneRecord.upsertRecord(app, updateKey, record, revision).then((rsp) => {
+var revision = REVISION_OF_RECORD;
+kintoneRecord.upsertRecord({app, updateKey, record, revision}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -391,45 +402,25 @@ kintoneRecord.upsertRecord(app, updateKey, record, revision).then((rsp) => {
 <td>kjs-record-upsertRecords</td>
 <td>
 <pre>	
-const app = 'your_app_id';
-  const records = [
-    {
-      updateKey: {
-        field: 'your_fieldcode',
-        value: 'your_fieldcode_value_1'
-      },
-      record: {
-        YourFieldCode: {
-          value: 'Value Of YourFieldCode 1'
-        },
-      }
+var app = YOUR_APP_ID;
+var records = [
+  {
+    updateKey: {
+      field: 'YOUR_FIELD_CODE',
+      value: 'YOUR_FIELD_CODE_VALUE_1'
     },
-    {
-      updateKey: {
-        field: 'your_fieldcode',
-        value: 'your_fieldcode_value_2'
+    record: {
+      YOUR_FIELD_CODE: {
+        value: 'VALUE_OF_YOUR_FIELD_CODE 1'
       },
-      record: {
-        YourFieldCode: {
-          value: 'Value Of YourFieldCode 2'
-        },
-      }
-    },
-    {
-      updateKey: {
-        field: 'your_fieldcode',
-        value: 'your_fieldcode_value_3'
-      },
-      record: {
-        YourFieldCode: {
-          value: 'Value Of YourFieldCode 3'
-        },
-      }
     }
-  ];
-  recordModule.upsertRecords(app, records).then((resp) => {
-    console.log(resp);
-  }).ca
+  }
+];
+kintoneRecord.upsertRecords({app, records}).then((resp) => {
+  console.log(resp);
+}).catch((err) => {
+  console.log(err);
+});
 </pre>
 </td>
 <td>Insert or update up to 1500 records to kintone app. If the records are over 1500, It is thrown Error. Insert the records if the updateKey doesn't exists and update the records if the updateKey exists.</td>
@@ -439,16 +430,16 @@ const app = 'your_app_id';
 <td>kjs-record-updateRecordAssignees</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const id = /*{your_record_id}*/;
-const assignees = [/*your_assignee(s)*/];
-const revision = /*{revision_of_record}*/;
+var app = YOUR_APP_ID;
+var id = YOUR_RECORD_ID;
+var assignees = ['YOUR_ASSIGNEE'];
+var revision = REVISION_OF_RECORD;
  
-kintoneRecord.updateRecordAssignees(app, id, assignees, revision).then((rsp) => {
+kintoneRecord.updateRecordAssignees({app, id, assignees, revision}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -458,18 +449,18 @@ kintoneRecord.updateRecordAssignees(app, id, assignees, revision).then((rsp) => 
 <tr>
 <td>kjs-record-updateRecordStatus</td>
 <td>
-<pre>
-const app = /*{your_app_id}*/;
-const id = /*{your_record_id}*/;
-const action = /*{your_action_name}*/;
-const assignee = '/*your_assignee(s)*/';
-const revision = /*{revision_of_record}*/;
+<pre>	
+var app = YOUR_APP_ID;
+var id = YOUR_RECORD_ID;
+var action = 'YOUR_ACTION_NAME';
+var assignee = 'YOUR_ASSIGNEE';
+var revision = REVISION_OF_RECORD;
  
-kintoneRecord.updateRecordStatus(app, id, action, assignee, revision).then((rsp) => {
+kintoneRecord.updateRecordStatus({app, id, action, assignee, revision}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -480,22 +471,22 @@ kintoneRecord.updateRecordStatus(app, id, action, assignee, revision).then((rsp)
 <td>kjs-recordupdateRecordsStatus</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const recordStatusUpdateItem = {
-    id: /*your_record_id*/,
-    action: '/*your_action_name*/',
-    assignee: '/*your_assignee*/',
-    revision: /*your_record_revision*/
+var app = YOUR_APP_ID;
+var recordStatusUpdateItem = {
+  id: YOUR_RECORD_ID,
+  action: 'YOUR_ACTION_NAME',
+  assignee: 'YOUR_ASSIGNEE',
+  revision: 'YOUR_RECORD_REVISION'
 }
-const records = [
-    recordStatusUpdateItem,
-    /*another data like recordStatusUpdateItem*/
+var records = [
+  recordStatusUpdateItem,
+  // another data like recordStatusUpdateItem
 ];
-kintoneRecord.updateRecordsStatus(app, records).then((rsp) => {
+kintoneRecord.updateRecordsStatus({app, records}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -506,16 +497,16 @@ kintoneRecord.updateRecordsStatus(app, records).then((rsp) => {
 <td>kjs-record-getComments</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const id = /*{your_record_id}*/;
-const order = /*{your_order_type}*/; // asc or desc
-const offset = /*{your_offset_number}*/;
-const limit = /*{your_limit number}*/;
-kintoneRecord.getComments(app, id, order, offset, limit).then((rsp) => {
+var app = YOUR_APP_ID;
+var record = YOUR_RECORD_ID;
+var order = 'YOUR_ORDER_TYPE'; // asc or desc
+var offset = YOUR_OFFSET_NUMBER;
+var limit = YOUR_LIMIT_NUMBER;
+kintoneRecord.getComments({app, record, order, offset, limit}).then((rsp) => {
   console.log(rsp);
 }).catch((err) => {
-  // This SDK return err with KintoneAPIExeption
-  console.log(err.get());
+  // This SDK return err with KintoneAPIException
+  console.log(err);
 });
 </pre>
 </td>
@@ -525,25 +516,25 @@ kintoneRecord.getComments(app, id, order, offset, limit).then((rsp) => {
 <tr>
 <td>kjs-record-addComment</td>
 <td>
-<pre>
-const app = /*{your_app_id}*/;
-const record = /*{your_record_id}*/;
-const comment = {
-  text: '/*your_comment_content*/',
+<pre>	
+var app = YOUR_APP_ID;
+var record = YOUR_RECORD_ID;
+var comment = {
+  text: 'YOUR_COMMENT_CONTENT',
   mentions: [
     {
-      code: '/*your_member_code*/',
-      type: '/*your_member_type*/' // either `USER` or `GROUP` or `ORGANIZATION`
+      code: 'YOUR_MEMBER_CODE',
+      type: 'YOUR_MEMBER_TYPE' // either `USER` or `GROUP` or `ORGANIZATION`
     },
     // another mention here
   ]
 };
-kintoneRecord.addComment(app, record, comment).then((rsp) => {
-    console.log(rsp);
-  }).catch((err) => {
-    // This SDK return err with KintoneAPIExeption
-    console.log(err.get());
-  });
+kintoneRecord.addComment({app, record, comment}).then((rsp) => {
+  console.log(rsp);
+}).catch((err) => {
+  // This SDK return err with KintoneAPIException
+  console.log(err);
+});
 </pre>
 </td>
 <td>Add the record comment</td>
@@ -553,15 +544,15 @@ kintoneRecord.addComment(app, record, comment).then((rsp) => {
 <td>kjs-record-deleteComment</td>
 <td>
 <pre>
-const app = /*{your_app_id}*/;
-const record = /*{your_record_id}*/;
-const comment = /*{your_comment_id}*/;
-kintoneRecord.deleteComment(app, record, comment).then((rsp) => {
-    console.log(rsp);
-  }).catch((err) => {
-    // This SDK return err with KintoneAPIExeption
-    console.log(err.get());
-  });
+var app = YOUR_APP_ID;
+var record = YOUR_RECORD_ID;
+var comment = YOUR_COMMENT_ID;
+kintoneRecord.deleteComment({app, record, comment}).then((rsp) => {
+  console.log(rsp);
+}).catch((err) => {
+  // This SDK return err with KintoneAPIException
+  console.log(err);
+});
 </pre>
 </td>
 <td>Delete the comment</td>
